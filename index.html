@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engagement Invitation - Kavinda & Abhilasha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fbf8f3;
+            color: #4a4a4a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* මල් වැටෙන Canvas එකට අදාළ Styles */
+        #flowerCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* බටන් ක්ලික් කරන්න බාධාවක් නොවෙන්න */
+            z-index: 1;
+        }
+
+        .card {
+            background: #ffffff;
+            max-width: 450px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+            padding: 30px 25px;
+            text-align: center;
+            border: 1px solid #f1e6d2;
+            position: relative;
+            overflow: hidden;
+            min-height: 580px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 2; /* කාඩ් එක මල් වලට උඩින් පේන්න */
+        }
+        /* Top & Bottom Gold Accents */
+        .card::before, .card::after {
+            content: "✨";
+            position: absolute;
+            font-size: 24px;
+            color: #d4af37;
+            width: 100%;
+            left: 0;
+            z-index: 2;
+        }
+        .card::before { top: 15px; }
+        .card::after { bottom: 15px; }
+
+        /* Page Handling */
+        .page {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Common Styles */
+        .title {
+            font-family: 'Alex Brush', cursive;
+            font-size: 42px;
+            color: #b5838d;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #a8dadc;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .names {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 25px;
+        }
+        .names span {
+            font-family: 'Alex Brush', cursive;
+            font-size: 45px;
+            color: #d4af37;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        /* Page 1 - Main Photo Container */
+        .main-photo-container {
+            width: 100%;
+            height: 280px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 3px solid #fff;
+            outline: 1px solid #f1e6d2;
+        }
+        .main-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Page 2 - Details Styles */
+        .details-box {
+            background: #fffbfa;
+            border: 1px dashed #e8c5c8;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .date {
+            font-size: 20px;
+            font-weight: 600;
+            color: #b5838d;
+            margin-bottom: 5px;
+        }
+        .time {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+        .auspicious {
+            font-size: 14px;
+            color: #d4af37;
+            font-weight: 600;
+            background: #fdf8e6;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .venue {
+            margin-top: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #4a4a4a;
+        }
+        
+        /* Countdown Styles */
+        .countdown-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999999;
+            margin-bottom: 10px;
+        }
+        .countdown {
+            display: flex;
+            justify-content: space-between;
+            max-width: 280px;
+            margin: 0 auto 25px auto;
+        }
+        .time-box {
+            background: #fbf8f3;
+            padding: 8px;
+            border-radius: 8px;
+            width: 60px;
+            border: 1px solid #f1e6d2;
+        }
+        .time-box span {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #b5838d;
+        }
+        .time-box label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #999999;
+        }
+
+        /* RSVP Box */
+        .rsvp-box {
+            background: #f7f9fa;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 13px;
+            color: #555555;
+            margin-bottom: 25px;
+            border: 1px solid #eef2f3;
+        }
+        .rsvp-box strong {
+            color: #b5838d;
+        }
+
+        /* Button Style */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #b5838d, #e8c5c8);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(181, 131, 141, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(181, 131, 141, 0.5);
+        }
+        .btn-back {
+            background: none;
+            color: #b5838d;
+            border: 1px solid #b5838d;
+            box-shadow: none;
+            margin-top: 15px;
+            padding: 8px 20px;
+        }
+        .btn-back:hover {
+            background: #fff5f6;
+            color: #b5838d;
+            box-shadow: none;
+        }
+        .footer-note {
+            margin-top: 15px;
+            font-size: 11px;
+            color: #aaaaaa;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- පසුබිමෙන් මල් වැටෙන Canvas එක -->
+    <canvas id="flowerCanvas"></canvas>
+
+    <div class="card">
+        
+        <!-- ==================== PAGE 1: OPENING ==================== -->
+        <div id="page1" class="page active">
+            <div class="main-photo-container">
+                <img src="Sachith2.jpg" alt="Kavinda & Abhilasha">
+            </div>
+
+            <div class="title">Are Getting Engaged</div>
+            <div class="subtitle">Save Our Date</div>
+            
+            <div class="names">
+                Kavinda <span>&</span> Abhilasha
+            </div>
+
+            <button class="btn" onclick="navigateTo(2)">View Details ✨</button>
+        </div>
+
+
+        <!-- ==================== PAGE 2: DETAILS ==================== -->
+        <div id="page2" class="page">
+            <div class="title" style="font-size: 32px; margin-bottom: 15px;">The Celebration</div>
+            
+            <div class="details-box">
+                <div class="date">November 26, 2026</div>
+                <div class="time">Thursday</div>
+                <div class="auspicious">🌅 නැකත උදේ 09:05 ට</div>
+                <div class="venue">📍 Thidasa Serenity</div>
+            </div>
+
+            <div class="countdown-title">The Countdown Begins</div>
+            <div class="countdown">
+                <div class="time-box"><span id="days">00</span><label>Days</label></div>
+                <div class="time-box"><span id="hours">00</span><label>Hrs</label></div>
+                <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
+                <div class="time-box"><span id="seconds">00</span><label>Secs</label></div>
+            </div>
+
+            <div class="rsvp-box">
+                📩 <strong>RSVP:</strong> කරුණාකර ඔබ පැමිණෙනවාදැයි නොවැම්බර් 10 දිනට පෙර දන්වන්න.<br>
+                📞 Kavinda: 0773978827
+            </div>
+
+            <<a href="https://maps.app.goo.gl/tdgjLnLQCRuNiwhm8" target="_blank" class="btn">VIEW LOCATION</a>
+            
+            <button class="btn btn-back" onclick="navigateTo(1)">← Back</button>
+
+            <div class="footer-note">We can't wait to celebrate with you!</div>
+        </div>
+
+    </div>
+
+    <script>
+        // Page Navigation
+        function navigateTo(pageNumber) {
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('page' + pageNumber).classList.add('active');
+        }
+
+        // Countdown Script
+        const countdownDate = new Date("November 26, 2026 09:05:00").getTime();
+
+        const updateCountdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                document.querySelector(".countdown").innerHTML = "<b style='color:#b5838d;'>Today is the Day!</b>";
+            }
+        }, 1000);
+
+        // ==================== මල් වැටෙන Animation Script ====================
+        const canvas = document.getElementById("flowerCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Canvas සයිස් එක Screen එකට සෙට් කිරීම
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const petals = [];
+        const maxPetals = 40; // වැටෙන මල් පෙති ගණන (වැඩි කළොත් මල් ගොඩක් වැටෙයි)
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 8 + 6; // පෙත්තේ සයිස් එක
+                this.speedY = Math.random() * 1.5 + 1; // පහළට වැටෙන වේගය
+                this.speedX = Math.random() * 1 - 0.5; // පැත්තට පාවෙන වේගය
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1; // කැරකෙන වේගය
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.angle += this.spin;
+
+                // බිමට වැටුණම ආයෙත් උඩින් පටන් ගන්න
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle * Math.PI / 180);
+                
+                // මල් පෙත්තේ පාට (Pastel Pink / Rose color)
+                ctx.fillStyle = "rgba(232, 197, 200, 0.7)";
+                
+                // මල් පෙත්තක් ඇඳීම (Ellipse shape)
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // පෙති ටික මුලින්ම ලෝඩ් කිරීම
+        for (let i = 0; i < maxPetals; i++) {
+            petals.push(new Petal());
+        }
+
+        // Animation එක දිගටම රන් කරන Loop එක
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+</body>
+</html>
